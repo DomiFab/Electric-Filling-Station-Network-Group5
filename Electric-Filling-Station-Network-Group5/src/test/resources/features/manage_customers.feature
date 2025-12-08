@@ -8,7 +8,7 @@ Feature: Manage Customers
     When a customer registers with name "Dea" and email "Dea@FhTechnikum.com"
     Then a customer with name "Dea" exists
     And the customer "Dea" has a unique customer id
-    And the customer "Dea" has a customer account with balance 0.0.
+    And the customer "Dea" has a customer account with balance 0.00.
 
     When the owner updates the email of customer "Dea" to "Dea@FhTechnikum-wien.at"
     Then the customer "Dea" has email "Dea@FhTechnikum-wien.at".
