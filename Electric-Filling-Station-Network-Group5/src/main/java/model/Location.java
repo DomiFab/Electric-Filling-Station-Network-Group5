@@ -35,4 +35,11 @@ public class Location {
     public List<ChargingStation> getChargingStations() {
         return chargingStations;
     }
+
+    @Override
+    public String toString() {
+        return "Location{name='" + name + "', address='" + address +
+                "', chargingStations=" + chargingStations.size() + "}";
+    }
+
 }

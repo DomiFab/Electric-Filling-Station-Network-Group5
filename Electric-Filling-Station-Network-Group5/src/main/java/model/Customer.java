@@ -26,4 +26,12 @@ public class Customer {
     public CustomerAccount getAccount() {
         return account;
     }
+
+    @Override
+    public String toString() {
+        return "Customer{name='" + name + "', email='" + email +
+                "', customerId='" + customerId +
+                "', balance=" + account.getBalance() + "}";
+    }
+
 }

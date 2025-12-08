@@ -14,4 +14,10 @@ public class ChargingStation {
     public void setStatus(OperatingStatus status) {
         this.status = status;
     }
+
+    @Override
+    public String toString() {
+        return "ChargingStation{id='" + stationId + "'}";
+    }
+
 }

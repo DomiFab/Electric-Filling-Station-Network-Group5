@@ -8,4 +8,11 @@ public class CustomerAccount {
     public void topUp(double amount) { balance += amount; }
 
     public void deduct(double amount) { balance -= amount; }
+
+    @Override
+    public String toString() {
+        return "Account{balance=" + balance + "}";
+    }
+
+
 }
