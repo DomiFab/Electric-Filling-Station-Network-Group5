@@ -75,3 +75,19 @@ public class Owner {
         return customers;
     }
 }
+public String getNetworkStatus() {
+    int total = 0;
+    int outOfOrder = 0;
+
+    for (Location loc : locations) {
+        for (ChargingStation cs : loc.getChargingStations()) {
+            total++;
+            if (cs.getStatus() == OperatingStatus.OUT_OF_ORDER) outOfOrder++;
+        }
+    }
+
+    if (total == 0) return NetworkStatus.OPERATIONAL.name();
+    if (outOfOrder == 0) return NetworkStatus.OPERATIONAL.name();
+    if (outOfOrder == total) return NetworkStatus.DOWN.name();
+    return NetworkStatus.DEGRADED.name();
+}
