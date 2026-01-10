@@ -3,6 +3,8 @@ package model;
 import java.util.ArrayList;
 import java.util.List;
 
+
+
 public class Location {
     private String name;
     private String address;
@@ -12,6 +14,7 @@ public class Location {
         this.name = name;
         this.address = address;
     }
+
 
     public String getName() { return name; }
     public String getAddress() { return address; }
