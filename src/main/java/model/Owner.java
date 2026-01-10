@@ -1,13 +1,16 @@
 package model;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Owner {
+
     private final List<Location> locations = new ArrayList<>();
     private final List<Customer> customers = new ArrayList<>();
+    private final Map<String, ChargingSession> activeSessions = new HashMap<>();
 
-    //Location CRUD Operations
 
     public void createLocation(String name, String address) {
         locations.add(new Location(name, address));
@@ -20,39 +23,54 @@ public class Owner {
                 .orElse(null);
     }
 
-    public void renameLocation(String oldName, String newName) {
-        Location loc = findLocation(oldName);
-        if (loc != null) loc.rename(newName);
+
+    public void setLocationPrice(String locationName, String mode, double pricePerKwh) {
+        Location loc = findLocation(locationName);
+        if (loc != null) loc.setPrice(mode, pricePerKwh);
     }
 
-    public void deleteLocation(String name) {
-        locations.removeIf(l -> l.getName().equals(name));
+    public double getLocationPrice(String locationName, String mode) {
+        Location loc = findLocation(locationName);
+        if (loc == null) return 0.0;
+        return loc.getPrice(mode);
     }
 
-    public List<Location> getLocations() {
-        return locations;
-    }
 
-    //Charging Station CRUD Operations
-
-    public void addChargingStation(String locationName, String stationId) {
+    public void addChargingStation(String locationName, String stationId, String mode) {
         Location loc = findLocation(locationName);
         if (loc != null) {
-            loc.addChargingStation(new ChargingStation(stationId));
+            loc.addChargingStation(new ChargingStation(stationId, mode));
         }
     }
 
-    public void removeChargingStation(String locationName, String stationId) {
-        Location loc = findLocation(locationName);
-        if (loc != null) {
-            loc.removeChargingStation(stationId);
+    public void updateChargingStationStatus(String stationId, String status) {
+        ChargingStation station = findChargingStation(stationId);
+        if (station != null) {
+            station.setStatus(OperatingStatus.valueOf(status));
         }
     }
 
-    //Customer CRUD Operations
+    public String getChargingStationStatus(String stationId) {
+        ChargingStation station = findChargingStation(stationId);
+        if (station == null) return "UNKNOWN";
+        return station.getStatus().name();
+    }
 
-    public void registerCustomer(String name, String email) {
-        customers.add(new Customer(name, email));
+    private ChargingStation findChargingStation(String stationId) {
+        for (Location loc : locations) {
+            ChargingStation s = loc.findChargingStation(stationId);
+            if (s != null) return s;
+        }
+        return null;
+    }
+
+
+
+    public void createCustomer(String name, double balance) {
+        // Create customer (email is irrelevant for this MVP test)
+        Customer c = new Customer(name, "dummy@local");
+
+        customers.add(c);
     }
 
     public Customer findCustomer(String name) {
@@ -62,16 +80,26 @@ public class Owner {
                 .orElse(null);
     }
 
-    public void updateCustomerEmail(String name, String newEmail) {
-        Customer c = findCustomer(name);
-        if (c != null) c.updateEmail(newEmail);
+    // -------------------------
+    // Vehicle Charging
+    // -------------------------
+
+    public void startCharging(String customerName, String stationId) {
+        Customer customer = findCustomer(customerName);
+        ChargingStation station = findChargingStation(stationId);
+
+        if (customer == null || station == null) return;
+
+        if (station.getStatus() != OperatingStatus.AVAILABLE) return;
+
+        // Balance check (via Customer.getBalance() which returns account.getBalance())
+        if (customer.getBalance() <= 0.0) return;
+
+        activeSessions.put(stationId, new ChargingSession(stationId, customerName));
+        station.setStatus(OperatingStatus.OCCUPIED);
     }
 
-    public void deleteCustomer(String name) {
-        customers.removeIf(c -> c.getName().equals(name));
-    }
-
-    public List<Customer> getCustomers() {
-        return customers;
+    public boolean hasActiveSession(String stationId) {
+        return activeSessions.containsKey(stationId);
     }
 }
