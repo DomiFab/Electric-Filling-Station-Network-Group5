@@ -6,6 +6,34 @@ import java.util.List;
 public class Owner {
     private final List<Location> locations = new ArrayList<>();
     private final List<Customer> customers = new ArrayList<>();
+    private final java.util.Map<String, java.util.List<Invoice>> invoicesByCustomer = new java.util.HashMap<>(); public void createCustomer(String name) {
+        // minimal customer creation for invoice use-case (email irrelevant)
+        customers.add(new Customer(name, "dummy@local"));
+    }
+
+    public void createInvoice(String customerName, String invoiceId, double amount, String status) {
+        Invoice inv = new Invoice(invoiceId, customerName, amount, InvoiceStatus.valueOf(status));
+        invoicesByCustomer.computeIfAbsent(customerName, k -> new java.util.ArrayList<>()).add(inv);
+    }
+
+    public java.util.List<Invoice> getInvoicesForCustomer(String customerName) {
+        return invoicesByCustomer.getOrDefault(customerName, new java.util.ArrayList<>());
+    }
+
+    public void updateInvoiceStatus(String invoiceId, String status) {
+        Invoice inv = findInvoice(invoiceId);
+        if (inv != null) inv.setStatus(InvoiceStatus.valueOf(status));
+    }
+
+    public Invoice findInvoice(String invoiceId) {
+        for (java.util.List<Invoice> list : invoicesByCustomer.values()) {
+            for (Invoice inv : list) {
+                if (inv.getInvoiceId().equals(invoiceId)) return inv;
+            }
+        }
+        return null;
+    }
+
 
     //Location CRUD Operations
 
@@ -75,3 +103,4 @@ public class Owner {
         return customers;
     }
 }
+
