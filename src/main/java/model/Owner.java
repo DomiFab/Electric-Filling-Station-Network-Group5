@@ -63,10 +63,10 @@ public class Owner {
 
     //Charging Station CRUD Operations
 
-    public void addChargingStation(String locationName, String stationId) {
+    public void addChargingStation(String locationName, String stationId, String mode) {
         Location loc = findLocation(locationName);
         if (loc != null) {
-            loc.addChargingStation(new ChargingStation(stationId));
+            loc.addChargingStation(new ChargingStation(stationId,mode));
         }
     }
 
@@ -102,5 +102,21 @@ public class Owner {
     public List<Customer> getCustomers() {
         return customers;
     }
-}
 
+    public String getNetworkStatus() {
+        int total = 0;
+        int outOfOrder = 0;
+
+        for (Location loc : locations) {
+            for (ChargingStation cs : loc.getChargingStations()) {
+                total++;
+                if (cs.getStatus() == OperatingStatus.OUT_OF_ORDER) outOfOrder++;
+            }
+        }
+
+        if (total == 0) return NetworkStatus.OPERATIONAL.name();
+        if (outOfOrder == 0) return NetworkStatus.OPERATIONAL.name();
+        if (outOfOrder == total) return NetworkStatus.DOWN.name();
+        return NetworkStatus.DEGRADED.name();
+    }
+}
