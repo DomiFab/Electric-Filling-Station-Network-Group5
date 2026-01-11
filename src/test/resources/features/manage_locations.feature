@@ -11,12 +11,15 @@ Feature: Manage Locations and Charging Stations
       Then the network contains a location named "FH Technikum"
       And location "FH Technikum" has 2 charging stations.
 
+    Scenario:
       When the owner renames the location "FH Technikum" to "FH Technikum Wien"
       Then the network contains a location named "FH Technikum Wien"
       And the network does not contain a location named "FH Technikum".
 
+    Scenario:
       When the owner removes the charging station "CS-2" from location "FH Technikum Wien"
       Then location "FH Technikum Wien" has 1 charging station.
 
+    Scenario:
       When the owner deletes the location "FH Technikum Wien"
       Then the network contains no locations.
