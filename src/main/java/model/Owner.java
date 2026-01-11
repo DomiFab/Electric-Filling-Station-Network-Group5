@@ -77,6 +77,19 @@ public class Owner {
         }
     }
 
+    public void setLocationPrice(String locationName, String mode, double pricePerKwh) {
+        Location loc = findLocation(locationName);
+        if (loc != null) {
+            loc.setPrice(mode, pricePerKwh);
+        }
+    }
+    public double getLocationPrice(String locationName, String mode) {
+        Location loc = findLocation(locationName);
+        if (loc == null) return 0.0;
+        return loc.getPrice(mode);
+    }
+
+
     //Customer CRUD Operations
 
     public void registerCustomer(String name, String email) {

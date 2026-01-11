@@ -1,16 +1,28 @@
 package model;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Location {
     private String name;
     private String address;
     private final List<ChargingStation> chargingStations = new ArrayList<>();
+    private final Map<String, Double> pricing = new HashMap<>();
+
 
     public Location(String name, String address) {
         this.name = name;
         this.address = address;
+    }
+
+    public void setPrice(String mode, double pricePerKwh) {
+        pricing.put(mode.trim(), pricePerKwh);
+    }
+
+    public double getPrice(String mode) {
+        return pricing.getOrDefault(mode.trim(), 0.0);
     }
 
     public String getName() { return name; }
@@ -35,6 +47,7 @@ public class Location {
     public List<ChargingStation> getChargingStations() {
         return chargingStations;
     }
+
 
     @Override
     public String toString() {
