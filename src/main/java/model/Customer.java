@@ -26,6 +26,10 @@ public class Customer {
     public CustomerAccount getAccount() {
         return account;
     }
+    public double getBalance() {
+        return account.getBalance();
+    }
+
 
     @Override
     public String toString() {
@@ -35,3 +39,5 @@ public class Customer {
     }
 
 }
+
+
