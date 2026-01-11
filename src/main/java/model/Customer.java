@@ -18,9 +18,8 @@ public class Customer {
     public String getCustomerId() { return customerId; }
     public String getName() { return name; }
     public String getEmail() { return email; }
-
-    public void updateEmail(String newEmail) {
-        this.email = newEmail;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public CustomerAccount getAccount() {

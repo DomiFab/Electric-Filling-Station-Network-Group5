@@ -17,14 +17,13 @@ public class ChargingStation {
 
 
     public OperatingStatus getStatus() { return status; }
-    public String getChargingMode() {
-        return chargingMode;
-    }
-
     public void setStatus(OperatingStatus status) {
         this.status = status;
     }
 
+    public String getChargingMode() {
+        return chargingMode;
+    }
 
     @Override
     public String toString() {

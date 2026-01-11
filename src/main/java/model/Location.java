@@ -19,6 +19,7 @@ public class Location {
         this.address = address;
     }
 
+
     public void setPrice(String mode, double pricePerKwh) {
         pricing.put(mode.trim(), pricePerKwh);
     }
@@ -28,7 +29,13 @@ public class Location {
     }
 
     public String getName() { return name; }
+    public void setName(String name) {
+        this.name = name;
+    }
     public String getAddress() { return address; }
+    public void setAddress(String address) {
+        this.address = address;
+    }
 
     public void rename(String newName) {
         this.name = newName;
@@ -46,7 +53,7 @@ public class Location {
         chargingStations.removeIf(s -> s.getStationId().equals(stationId));
     }
 
-    public ChargingStation findChargingStation(String stationId) {
+    public ChargingStation findChargingStationById(String stationId) {
         return chargingStations.stream()
                 .filter(s -> s.getStationId().equals(stationId))
                 .findFirst()
@@ -57,6 +64,15 @@ public class Location {
         return chargingStations;
     }
 
+    private final Map<String, Double> pricePerKwhByMode = new HashMap<>();
+
+    public void setPricePerKwh(String chargingMode, double price) {
+        pricePerKwhByMode.put(chargingMode, price);
+    }
+
+    public double getPricePerKwh(String chargingMode) {
+        return pricePerKwhByMode.getOrDefault(chargingMode, 0.0);
+    }
 
     @Override
     public String toString() {
