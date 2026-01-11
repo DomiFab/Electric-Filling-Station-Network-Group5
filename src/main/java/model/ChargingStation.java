@@ -8,15 +8,10 @@ public class ChargingStation {
 
 
     public ChargingStation(String stationId, String chargingMode) {
-    public ChargingStation(String stationId, String chargingMode) {
         this.stationId = stationId;
-        this.chargingMode = chargingMode;
         this.chargingMode = chargingMode;
     }
 
-    public String getStationId() {
-        return stationId;
-    }
 
     public String getStationId() { return stationId; }
 
@@ -24,13 +19,6 @@ public class ChargingStation {
     public OperatingStatus getStatus() { return status; }
     public String getChargingMode() {
         return chargingMode;
-    }
-    public String getChargingMode() {
-        return chargingMode;
-    }
-
-    public OperatingStatus getStatus() {
-        return status;
     }
 
     public void setStatus(OperatingStatus status) {
@@ -40,7 +28,6 @@ public class ChargingStation {
 
     @Override
     public String toString() {
-        return "ChargingStation{id='" + stationId + "', mode='" + chargingMode + "'}";
         return "ChargingStation{id='" + stationId + "', mode='" + chargingMode + "', status=" + status + "}";
     }
 }

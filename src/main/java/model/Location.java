@@ -14,9 +14,6 @@ public class Location {
     private final Map<String, Double> pricing = new HashMap<>();
 
 
-    // Pricing: "AC"/"DC" -> price per kWh
-    private final Map<String, Double> pricing = new HashMap<>();
-
     public Location(String name, String address) {
         this.name = name;
         this.address = address;
@@ -32,13 +29,6 @@ public class Location {
 
     public String getName() { return name; }
     public String getAddress() { return address; }
-    public String getName() {
-        return name;
-    }
-
-    public String getAddress() {
-        return address;
-    }
 
     public void rename(String newName) {
         this.name = newName;
@@ -47,10 +37,6 @@ public class Location {
     public void updateAddress(String newAddress) {
         this.address = newAddress;
     }
-
-    // -------------------------
-    // Charging Stations
-    // -------------------------
 
     public void addChargingStation(ChargingStation station) {
         chargingStations.add(station);
@@ -74,17 +60,11 @@ public class Location {
 
     @Override
     public String toString() {
-        return "Location{name='" + name + "', address='" + address +
-                "', chargingStations=" + chargingStations.size() + "}";
-    // -------------------------
-    // Pricing
-    // -------------------------
-
-    public void setPrice(String mode, double pricePerKwh) {
-        pricing.put(mode.trim(), pricePerKwh);
-    }
-
-    public double getPrice(String mode) {
-        return pricing.getOrDefault(mode.trim(), 0.0);
+        return "Location{" +
+                "name='" + name + '\'' +
+                ", address='" + address + '\'' +
+                ", chargingStations=" + chargingStations +
+                ", pricing=" + pricing +
+                '}';
     }
 }
