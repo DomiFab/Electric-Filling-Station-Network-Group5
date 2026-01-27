@@ -43,4 +43,9 @@ public class ManageVehicleChargingStep {
     public void no_active_session_exists(String stationId) {
         assertFalse(ctx.vehicleChargingManagement.hasActiveSession(stationId));
     }
+
+    @When("the customer stops charging at station {string} with duration {int} minutes and energy {double} kWh")
+    public void customer_stops_charging(String stationId, Integer durationMin, Double energyKwh) {
+        ctx.vehicleChargingManagement.stopChargingValidated(stationId, durationMin, energyKwh);
+    }
 }

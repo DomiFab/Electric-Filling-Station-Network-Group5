@@ -41,3 +41,14 @@ Feature: Network status
     And charging station "CS-2" has operating status "OUT_OF_ORDER"
     And the customer requests the network status
     Then the network status is "DOWN"
+
+  Scenario: Customer can view a status report with prices and station states
+    Given an electric filling station network exists
+    And a location named "FH Technikum Wien" exists with address "Hochstädtplatz"
+    And pricing for location "FH Technikum Wien" and charging mode "AC" is 0.30
+    And a charging station with id "CS-1" exists at location "FH Technikum Wien" with charging mode "AC"
+    And charging station "CS-1" has operating status "AVAILABLE"
+    When the customer requests the network status report
+    Then the network status report contains "Location: FH Technikum Wien"
+    And the network status report contains "AC=0.3"
+    And the network status report contains "Station CS-1"

@@ -55,4 +55,34 @@ public class CustomerManagement {
         if (c != null) c.getAccount().setBalance(balance);
     }
 
+    public double getBalance(String customerName) {
+        Customer c = findCustomer(customerName);
+        if (c == null) {
+            throw new IllegalArgumentException("Customer \"" + customerName + "\" does not exist");
+        }
+        return c.getAccount().getBalance();
+    }
+
+    /**
+     * Prepaid top-up.
+     */
+    public void topUp(String customerName, double amount) {
+        Customer c = findCustomer(customerName);
+        if (c == null) {
+            throw new IllegalArgumentException("Customer \"" + customerName + "\" does not exist");
+        }
+        c.getAccount().topUp(amount);
+    }
+
+    /**
+     * Deduct from prepaid balance.
+     */
+    public void deduct(String customerName, double amount) {
+        Customer c = findCustomer(customerName);
+        if (c == null) {
+            throw new IllegalArgumentException("Customer \"" + customerName + "\" does not exist");
+        }
+        c.getAccount().deduct(amount);
+    }
+
 }

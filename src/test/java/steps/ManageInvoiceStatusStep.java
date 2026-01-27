@@ -13,9 +13,10 @@ public class ManageInvoiceStatusStep {
 
     private List<Invoice> lastInvoices;
 
-    @Given("the owner creates an invoice {string} for customer {string} with amount {double} and status {string}")
-    public void owner_creates_invoice(String invoiceId, String customerName, double amount, String status) {
-        ctx.invoiceManagement.addInvoiceForCustomer(customerName, new Invoice(invoiceId, customerName, amount, InvoiceStatus.valueOf(status))
+    @Given("the system creates an invoice {string} for customer {string} with status {string}")
+    public void system_creates_invoice(String invoiceId, String customerId, String status) {
+        ctx.invoiceManagement.addInvoiceForCustomer(customerId,
+                new Invoice(invoiceId, customerId, InvoiceStatus.valueOf(status))
         );
     }
 

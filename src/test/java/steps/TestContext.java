@@ -27,7 +27,6 @@ public class TestContext {
         networkStatusManagement = new NetworkStatusManagement(network);
         locationPricingManagement = new LocationPricingManagement(network);
         vehicleChargingManagement = new VehicleChargingManagement(network);
-
         errorMsg = null;
 
         owner = new Owner(

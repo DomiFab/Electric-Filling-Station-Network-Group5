@@ -38,4 +38,28 @@ public class NetworkStatusManagement {
     public String getNetworkStatusAsString() {
         return getNetworkStatus().name();
     }
+
+    /**
+     * Human-readable status report required by the customer needs:
+     * per location -> current prices -> operating status of each charging station.
+     */
+    public String getNetworkStatusReport() {
+        StringBuilder sb = new StringBuilder();
+        for (Location loc : network.getLocations()) {
+            sb.append("Location: ").append(loc.getName()).append("\n");
+            sb.append("  Prices (per kWh): ")
+                    .append("AC=").append(loc.getPricePerKwh("AC"))
+                    .append(", DC=").append(loc.getPricePerKwh("DC"))
+                    .append("\n");
+
+            for (var st : loc.getChargingStations()) {
+                sb.append("  Station ")
+                        .append(st.getStationId())
+                        .append(" [").append(st.getChargingMode()).append("] ")
+                        .append(st.getStatus())
+                        .append("\n");
+            }
+        }
+        return sb.toString();
+    }
 }

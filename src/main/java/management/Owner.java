@@ -55,4 +55,21 @@ public class Owner {
     public VehicleChargingManagement vehicleCharging() {
         return vehicleChargingManagement;
     }
+
+    // Convenience facade methods (as shown in the UML and used by MainApp)
+    public void createLocation(String name, String address) {
+        locationManagement.createLocation(name, address);
+    }
+
+    public void addChargingStation(String locationName, String stationId, String chargingMode) {
+        chargingStationManagement.addChargingStation(locationName, stationId, chargingMode);
+    }
+
+    public void setPricePerKwh(String locationName, String mode, double price) {
+        locationPricingManagement.setPricePerKwh(locationName, mode, price);
+    }
+
+    public void registerCustomer(String customerId, String email) {
+        customerManagement.registerCustomer(customerId, email);
+    }
 }

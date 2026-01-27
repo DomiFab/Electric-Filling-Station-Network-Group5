@@ -30,5 +30,5 @@ Feature: Manage Locations and Charging Stations
 
   # Error case: duplicate location names are not allowed
   Scenario: Duplicate location name is rejected
-    When the owner tries to create a location "FH Technikum" with address "Some Other Address"
+    When the owner tries to create a location "FH Technikum" with address "Tiefstädtplatz"
     Then an error indicates that location "FH Technikum" already exists
