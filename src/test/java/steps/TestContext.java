@@ -15,6 +15,8 @@ public class TestContext {
     public LocationPricingManagement locationPricingManagement;
     public VehicleChargingManagement vehicleChargingManagement;
 
+    public String errorMsg;
+
 
     public void reset() {
         network = new ElectricFillingStationNetwork();
@@ -25,6 +27,8 @@ public class TestContext {
         networkStatusManagement = new NetworkStatusManagement(network);
         locationPricingManagement = new LocationPricingManagement(network);
         vehicleChargingManagement = new VehicleChargingManagement(network);
+
+        errorMsg = null;
 
         owner = new Owner(
                 customerManagement,

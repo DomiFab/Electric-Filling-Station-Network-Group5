@@ -27,3 +27,8 @@ Feature: Manage Locations and Charging Stations
     When the owner renames the location "FH Technikum" to "FH Technikum Wien"
     And the owner deletes the location "FH Technikum Wien"
     Then the network contains no locations.
+
+  # Error case: duplicate location names are not allowed
+  Scenario: Duplicate location name is rejected
+    When the owner tries to create a location "FH Technikum" with address "Some Other Address"
+    Then an error indicates that location "FH Technikum" already exists

@@ -12,15 +12,30 @@ public class ChargingStationManagement {
 
     public void addChargingStation(String locationName, String stationId, String chargingMode) {
         Location loc = network.findLocationByName(locationName);
-        if (loc == null) return;
-
+        if (loc == null) {
+            throw new IllegalArgumentException("Location \"" + locationName + "\" does not exist");
+        }
+        if (stationId == null || stationId.isBlank()) {
+            throw new IllegalArgumentException("ChargingStation id must not be empty");
+        }
+        if (loc.findChargingStationById(stationId) != null) {
+            throw new IllegalArgumentException(
+                    "ChargingStation \"" + stationId + "\" already exists at location \"" + locationName + "\""
+            );
+        }
         loc.addChargingStation(new ChargingStation(stationId, chargingMode));
     }
 
     public void removeChargingStation(String locationName, String stationId) {
         Location loc = network.findLocationByName(locationName);
-        if (loc == null) return;
-
+        if (loc == null) {
+            throw new IllegalArgumentException("Location \"" + locationName + "\" does not exist");
+        }
+        if (loc.findChargingStationById(stationId) == null) {
+            throw new IllegalArgumentException(
+                    "ChargingStation \"" + stationId + "\" does not exist at location \"" + locationName + "\""
+            );
+        }
         loc.removeChargingStation(stationId);
     }
 

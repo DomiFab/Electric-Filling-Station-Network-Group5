@@ -13,6 +13,20 @@ public class ManageCustomersStep {
         ctx.customerManagement.registerCustomer(name, email);
     }
 
+    @When("a customer tries to register with name {string} and invalid email {string}")
+    public void customer_tries_to_register_invalid_email(String name, String email) {
+        try {
+            ctx.customerManagement.registerCustomer(name, email);
+        } catch (Exception e) {
+            ctx.errorMsg = e.getMessage();
+        }
+    }
+
+    @Then("an error indicates that the customer email {string} is invalid")
+    public void an_error_indicates_invalid_email(String email) {
+        assertEquals("Customer email \"" + email + "\" is invalid", ctx.errorMsg);
+    }
+
     @Then("a customer with name {string} exists")
     public void customer_exists(String name) {
         assertNotNull(ctx.customerManagement.findCustomer(name));

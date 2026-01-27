@@ -14,6 +14,23 @@ public class ManageChargingStationsStep {
         ctx.chargingStationManagement.addChargingStation(locationName, stationId, chargingMode);
     }
 
+    @When("the owner tries to add a charging station with id {string} and charging mode {string} to location {string}")
+    public void the_owner_tries_to_add_a_charging_station(String stationId, String chargingMode, String locationName) {
+        try {
+            ctx.chargingStationManagement.addChargingStation(locationName, stationId, chargingMode);
+        } catch (Exception e) {
+            ctx.errorMsg = e.getMessage();
+        }
+    }
+
+    @Then("an error indicates that charging station {string} already exists at location {string}")
+    public void an_error_indicates_duplicate_station(String stationId, String locationName) {
+        assertEquals(
+                "ChargingStation \"" + stationId + "\" already exists at location \"" + locationName + "\"",
+                ctx.errorMsg
+        );
+    }
+
     @Given("a charging station with id {string} and charging mode {string} exists at location {string}")
     public void a_charging_station_exists_at_location(String stationId, String chargingMode, String locationName) {
         ctx.chargingStationManagement.addChargingStation(locationName, stationId, chargingMode);

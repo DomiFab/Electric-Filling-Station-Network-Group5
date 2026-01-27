@@ -21,3 +21,8 @@ Feature: Manage Customers
     When a customer registers with name "Dea" and email "Dea@FhTechnikum.com"
     And the owner deletes the customer "Dea"
     Then no customers exist.
+
+  # Error case: invalid email input should be rejected
+  Scenario: Customer registration is rejected for invalid email
+    When a customer tries to register with name "Dea" and invalid email "DeaFhTechnikum.com"
+    Then an error indicates that the customer email "DeaFhTechnikum.com" is invalid

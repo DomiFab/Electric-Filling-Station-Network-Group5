@@ -13,6 +13,20 @@ public class ManageLocationsStep {
         ctx.locationManagement.createLocation(name, address);
     }
 
+    @When("the owner tries to create a location {string} with address {string}")
+    public void the_owner_tries_to_create_location(String name, String address) {
+        try {
+            ctx.locationManagement.createLocation(name, address);
+        } catch (Exception e) {
+            ctx.errorMsg = e.getMessage();
+        }
+    }
+
+    @Then("an error indicates that location {string} already exists")
+    public void an_error_indicates_duplicate_location(String name) {
+        assertEquals("Location \"" + name + "\" already exists", ctx.errorMsg);
+    }
+
     @Then("the network contains a location named {string}")
     public void the_network_contains_location(String name) {
         assertNotNull(ctx.locationManagement.findLocation(name));

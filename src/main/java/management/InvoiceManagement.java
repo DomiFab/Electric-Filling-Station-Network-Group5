@@ -24,7 +24,10 @@ public class InvoiceManagement {
 
     public void updateInvoiceStatus(String invoiceId, String status) {
         Invoice inv = network.findInvoice(invoiceId);
-        if (inv != null) inv.setStatus(InvoiceStatus.valueOf(status));
+        if (inv == null) {
+            throw new IllegalArgumentException("Invoice \"" + invoiceId + "\" does not exist");
+        }
+        inv.setStatus(InvoiceStatus.valueOf(status));
     }
 
     public Invoice findInvoice(String invoiceId) {

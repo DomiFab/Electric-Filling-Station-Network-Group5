@@ -12,6 +12,15 @@ public class LocationManagement {
     }
 
     public void createLocation(String name, String address) {
+        if (name == null || name.isBlank()) {
+            throw new IllegalArgumentException("Location name must not be empty");
+        }
+        if (address == null || address.isBlank()) {
+            throw new IllegalArgumentException("Location address must not be empty");
+        }
+        if (network.findLocationByName(name) != null) {
+            throw new IllegalArgumentException("Location \"" + name + "\" already exists");
+        }
         network.addLocation(new Location(name, address));
     }
 
@@ -21,7 +30,15 @@ public class LocationManagement {
 
     public void renameLocation(String oldName, String newName) {
         Location loc = findLocation(oldName);
-        if (loc == null) return;
+        if (loc == null) {
+            throw new IllegalArgumentException("Location \"" + oldName + "\" does not exist");
+        }
+        if (newName == null || newName.isBlank()) {
+            throw new IllegalArgumentException("Location name must not be empty");
+        }
+        if (network.findLocationByName(newName) != null) {
+            throw new IllegalArgumentException("Location \"" + newName + "\" already exists");
+        }
 
         network.removeLocationByName(oldName);
         loc.setName(newName);
@@ -29,6 +46,9 @@ public class LocationManagement {
     }
 
     public void deleteLocation(String name) {
+        if (network.findLocationByName(name) == null) {
+            throw new IllegalArgumentException("Location \"" + name + "\" does not exist");
+        }
         network.removeLocationByName(name);
     }
 

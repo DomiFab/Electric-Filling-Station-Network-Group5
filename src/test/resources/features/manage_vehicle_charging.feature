@@ -21,3 +21,11 @@ Feature: Vehicle Charging
     When customer "C-2" starts charging at station "CS-1"
     Then charging station "CS-1" has operating status "AVAILABLE"
     And no active charging session exists for station "CS-1"
+
+  # Error case: charging at an unavailable station is rejected
+  Scenario: Charging is rejected when station is out of order
+    Given a customer "C-1" exists with balance 10.00
+    And charging station "CS-1" has operating status "OUT_OF_ORDER"
+    When customer "C-1" tries to start charging at station "CS-1"
+    Then an error indicates that charging station "CS-1" is not available
+    And no active charging session exists for station "CS-1"

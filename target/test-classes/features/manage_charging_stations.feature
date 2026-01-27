@@ -23,3 +23,9 @@ Feature: Manage Charging Stations
     Given a charging station with id "CS-1" and charging mode "AC" exists at location "FH Technikum Wien"
     When the owner removes the charging station "CS-1" from location "FH Technikum Wien"
     Then location "FH Technikum Wien" has 0 charging stations
+
+  # Error case: duplicate station ids are not allowed within the same location
+  Scenario: Duplicate charging station id is rejected
+    Given a charging station with id "CS-1" and charging mode "AC" exists at location "FH Technikum Wien"
+    When the owner tries to add a charging station with id "CS-1" and charging mode "DC" to location "FH Technikum Wien"
+    Then an error indicates that charging station "CS-1" already exists at location "FH Technikum Wien"

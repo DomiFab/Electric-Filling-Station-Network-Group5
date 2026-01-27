@@ -35,6 +35,20 @@ public class ManageInvoiceStatusStep {
         ctx.invoiceManagement.updateInvoiceStatus(invoiceId, status);
     }
 
+    @When("the owner tries to update invoice {string} status to {string}")
+    public void owner_tries_to_update_non_existing_invoice(String invoiceId, String status) {
+        try {
+            ctx.invoiceManagement.updateInvoiceStatus(invoiceId, status);
+        } catch (Exception e) {
+            ctx.errorMsg = e.getMessage();
+        }
+    }
+
+    @Then("an error indicates that invoice {string} does not exist")
+    public void an_error_indicates_invoice_does_not_exist(String invoiceId) {
+        assertEquals("Invoice \"" + invoiceId + "\" does not exist", ctx.errorMsg);
+    }
+
     @Then("invoice {string} has status {string}")
     public void invoice_has_status(String invoiceId, String expectedStatus) {
         Invoice inv = ctx.invoiceManagement.findInvoice(invoiceId);

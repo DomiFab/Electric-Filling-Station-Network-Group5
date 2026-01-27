@@ -39,6 +39,54 @@ public class VehicleChargingManagement {
         station.setStatus(OperatingStatus.OCCUPIED);
     }
 
+    /**
+     * Same as {@link #startCharging(String, String)} but throws an exception instead of silently returning.
+     * Used for BDD error-case scenarios.
+     */
+    public void startChargingValidated(String customerId, String stationId) {
+        Location foundLocation = null;
+        ChargingStation station = null;
+
+        for (Location loc : network.getLocations()) {
+            ChargingStation s = loc.findChargingStationById(stationId);
+            if (s != null) {
+                foundLocation = loc;
+                station = s;
+                break;
+            }
+        }
+
+        if (foundLocation == null || station == null) {
+            throw new IllegalArgumentException("ChargingStation \"" + stationId + "\" does not exist");
+        }
+
+        if (station.getStatus() != OperatingStatus.AVAILABLE) {
+            throw new IllegalArgumentException(
+                    "ChargingStation \"" + stationId + "\" is not available (status: " + station.getStatus() + ")"
+            );
+        }
+
+        Customer customer = network.findCustomerByName(customerId);
+        if (customer == null) {
+            throw new IllegalArgumentException("Customer \"" + customerId + "\" does not exist");
+        }
+
+        if (customer.getAccount().getBalance() <= 0.0) {
+            throw new IllegalArgumentException("Insufficient balance for customer \"" + customerId + "\"");
+        }
+
+        double price = foundLocation.getPricePerKwh(station.getChargingMode());
+        if (price <= 0.0) {
+            throw new IllegalArgumentException(
+                    "No valid pricing for location \"" + foundLocation.getName() + "\" and mode \"" + station.getChargingMode() + "\""
+            );
+        }
+
+        ChargingSession session = new ChargingSession(stationId, customerId, price);
+        network.addActiveSession(session);
+        station.setStatus(OperatingStatus.OCCUPIED);
+    }
+
     public boolean hasActiveSession(String stationId) {
         return network.hasActiveSession(stationId);
     }
@@ -46,6 +94,7 @@ public class VehicleChargingManagement {
     public ChargingSession getActiveSession(String stationId) {
         return network.getActiveSession(stationId);
     }
+
     public double getActiveSessionPricePerKwh(String stationId) {
         ChargingSession session = network.getActiveSession(stationId);
         if (session == null) {

@@ -28,3 +28,8 @@ Feature: Manage location pricing
     When customer "C-1" starts charging at station "CS-1"
     And the owner updates the price for location "FH Technikum Wien" and charging mode "AC" to 0.60
     Then the active charging session at station "CS-1" uses price 0.30
+
+  # Error case: negative prices are invalid input
+  Scenario: Negative price is rejected
+    When the owner tries to set the price for location "FH Technikum Wien" and charging mode "AC" to -0.01
+    Then an error indicates that the price must be non-negative
