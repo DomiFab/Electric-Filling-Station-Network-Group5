@@ -1,9 +1,6 @@
 import management.*;
 import model.*;
 
-/**
- * Simple demo program that showcases the business logic independently of the Cucumber step definitions.
- */
 public class MainApp {
     public static void main(String[] args) {
 
