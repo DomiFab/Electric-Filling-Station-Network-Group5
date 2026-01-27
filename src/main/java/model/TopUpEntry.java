@@ -2,9 +2,7 @@ package model;
 
 import java.time.Instant;
 
-/**
- * Records a prepaid top-up operation on a customer account.
- */
+
 public class TopUpEntry {
     private final Instant time;
     private final double amount;

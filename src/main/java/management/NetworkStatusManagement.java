@@ -39,10 +39,7 @@ public class NetworkStatusManagement {
         return getNetworkStatus().name();
     }
 
-    /**
-     * Human-readable status report required by the customer needs:
-     * per location -> current prices -> operating status of each charging station.
-     */
+
     public String getNetworkStatusReport() {
         StringBuilder sb = new StringBuilder();
         for (Location loc : network.getLocations()) {

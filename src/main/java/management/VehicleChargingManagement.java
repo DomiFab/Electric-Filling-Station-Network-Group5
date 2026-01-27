@@ -16,14 +16,9 @@ public class VehicleChargingManagement {
         try {
             startChargingValidated(customerId, stationId);
         } catch (Exception ignored) {
-            // silent behavior for non-validated call
         }
     }
 
-    /**
-     * Same as {@link #startCharging(String, String)} but throws an exception instead of silently returning.
-     * Used for BDD error-case scenarios.
-     */
     public void startChargingValidated(String customerId, String stationId) {
         Location foundLocation = null;
         ChargingStation station = null;
@@ -59,17 +54,14 @@ public class VehicleChargingManagement {
             );
         }
 
-        // Prepaid: reserve the cost for 1 kWh immediately.
         double reservation = price;
         if (customer.getAccount().getBalance() < reservation) {
             throw new IllegalArgumentException("Insufficient balance for customer \"" + customerId + "\"");
         }
 
-        // System invoice creation & linking
         InvoiceManagement invoiceManagement = new InvoiceManagement(network);
         String invoiceId = invoiceManagement.ensureOpenInvoice(customerId).getInvoiceId();
 
-        // Deduct reservation immediately
         customer.getAccount().deduct(reservation);
 
         ChargingSession session = new ChargingSession(
@@ -84,10 +76,6 @@ public class VehicleChargingManagement {
         station.setStatus(OperatingStatus.OCCUPIED);
     }
 
-    /**
-     * Finish a charging session and create an invoice item (billing by kWh; duration is recorded).
-     * Any additional amount beyond the reserved amount is deducted.
-     */
     public void stopChargingValidated(String stationId, int durationMinutes, double energyKwh) {
         ChargingSession session = network.getActiveSession(stationId);
         if (session == null) {
@@ -98,7 +86,6 @@ public class VehicleChargingManagement {
             throw new IllegalArgumentException("Duration and energy must be non-negative");
         }
 
-        // Find station and location
         Location foundLocation = null;
         ChargingStation station = null;
         for (Location loc : network.getLocations()) {
@@ -118,20 +105,25 @@ public class VehicleChargingManagement {
             throw new IllegalArgumentException("Customer \"" + session.getCustomerId() + "\" does not exist");
         }
 
-        double total = energyKwh * session.getLockedPricePerKwh();
+        double total = round(energyKwh * session.getLockedPricePerKwh());
         double reserved = session.getReservedAmount();
-        double additional = Math.max(0.0, total - reserved);
-        if (customer.getAccount().getBalance() < additional) {
-            throw new IllegalArgumentException("Insufficient balance for customer \"" + customer.getName() + "\"");
-        }
-        if (additional > 0.0) {
-            customer.getAccount().deduct(additional);
+        double delta = round(total - reserved);
+
+        if (delta > 0.0) {
+            if (customer.getAccount().getBalance() < delta) {
+                throw new IllegalArgumentException(
+                        "Insufficient balance for customer \"" + customer.getName() + "\""
+                );
+            }
+            customer.getAccount().deduct(delta);
+        } else if (delta < 0.0) {
+            customer.getAccount().topUp(-delta);
         }
 
-        // Create invoice line item
+
         InvoiceManagement invoiceManagement = new InvoiceManagement(network);
         int itemNo = invoiceManagement.findInvoice(session.getInvoiceId()).getItems().size() + 1;
-        InvoiceItem item = new InvoiceItem(
+        Invoice.InvoiceItem item = new Invoice.InvoiceItem(
                 itemNo,
                 session.getStartTime(),
                 foundLocation.getName(),
@@ -153,16 +145,16 @@ public class VehicleChargingManagement {
         return network.hasActiveSession(stationId);
     }
 
-    public ChargingSession getActiveSession(String stationId) {
-        return network.getActiveSession(stationId);
-    }
-
     public double getActiveSessionPricePerKwh(String stationId) {
         ChargingSession session = network.getActiveSession(stationId);
         if (session == null) {
             throw new IllegalStateException("No active session for station " + stationId);
         }
         return session.getLockedPricePerKwh();
+    }
+
+    private double round(double value) {
+        return Math.round(value * 100.0) / 100.0;
     }
 
 }

@@ -2,7 +2,6 @@ package management;
 
 import model.ElectricFillingStationNetwork;
 import model.Invoice;
-import model.InvoiceItem;
 import model.InvoiceStatus;
 import model.TopUpEntry;
 
@@ -23,9 +22,6 @@ public class InvoiceManagement {
         network.addInvoice(customerIdOrName, invoice);
     }
 
-    /**
-     * System creates (or reuses) an OPEN invoice for a customer and returns it.
-     */
     public Invoice ensureOpenInvoice(String customerId) {
         List<Invoice> existing = getInvoicesForCustomer(customerId);
         for (int i = existing.size() - 1; i >= 0; i--) {
@@ -41,19 +37,13 @@ public class InvoiceManagement {
         return created;
     }
 
-    /**
-     * Record a prepaid top-up on the customer's current invoice.
-     */
     public void recordTopUp(String customerId, double amount, double resultingBalance) {
         Invoice inv = ensureOpenInvoice(customerId);
         inv.addTopUp(new TopUpEntry(Instant.now(), amount));
         inv.setOutstandingBalance(resultingBalance);
     }
 
-    /**
-     * Add a charging-session line item to the invoice and update outstanding balance.
-     */
-    public void addInvoiceItem(String invoiceId, InvoiceItem item, double resultingBalance) {
+    public void addInvoiceItem(String invoiceId, Invoice.InvoiceItem item, double resultingBalance) {
         Invoice inv = findInvoice(invoiceId);
         if (inv == null) {
             throw new IllegalArgumentException("Invoice \"" + invoiceId + "\" does not exist");

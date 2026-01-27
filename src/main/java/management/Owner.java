@@ -56,7 +56,6 @@ public class Owner {
         return vehicleChargingManagement;
     }
 
-    // Convenience facade methods (as shown in the UML and used by MainApp)
     public void createLocation(String name, String address) {
         locationManagement.createLocation(name, address);
     }

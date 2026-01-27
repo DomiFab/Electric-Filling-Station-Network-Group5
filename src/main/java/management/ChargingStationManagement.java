@@ -46,10 +46,6 @@ public class ChargingStationManagement {
         return loc.findChargingStationById(stationId);
     }
 
-    public void setOperatingStatusByStationId(String stationId, String status) {
-        setOperatingStatusByStationId(stationId, model.OperatingStatus.valueOf(status));
-    }
-
     public void setOperatingStatusByStationId(String stationId, model.OperatingStatus status) {
         for (model.Location loc : network.getLocations()) {
             model.ChargingStation station = loc.findChargingStationById(stationId);

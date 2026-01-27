@@ -63,9 +63,6 @@ public class CustomerManagement {
         return c.getAccount().getBalance();
     }
 
-    /**
-     * Prepaid top-up.
-     */
     public void topUp(String customerName, double amount) {
         Customer c = findCustomer(customerName);
         if (c == null) {
@@ -74,9 +71,6 @@ public class CustomerManagement {
         c.getAccount().topUp(amount);
     }
 
-    /**
-     * Deduct from prepaid balance.
-     */
     public void deduct(String customerName, double amount) {
         Customer c = findCustomer(customerName);
         if (c == null) {

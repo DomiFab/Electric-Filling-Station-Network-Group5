@@ -4,10 +4,9 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
-/**
- * Invoice created by the system for a customer.
- * Contains charging session items (sorted by start time) and top-up information.
- */
+import static model.CustomerAccount.roundMoney;
+
+
 public class Invoice {
 
     private final String invoiceId;
@@ -22,7 +21,7 @@ public class Invoice {
         this.invoiceId = invoiceId;
         this.customerId = customerId;
         this.status = status;
-        this.outstandingBalance = 0.0;
+        this.outstandingBalance = 0.00;
     }
 
     public String getInvoiceId() {
@@ -63,6 +62,76 @@ public class Invoice {
     }
 
     public void setOutstandingBalance(double outstandingBalance) {
-        this.outstandingBalance = outstandingBalance;
+        this.outstandingBalance = roundMoney(outstandingBalance);
+    }
+
+
+    public static class InvoiceItem {
+
+        private final int itemNo;
+        private final java.time.Instant startTime;
+        private final String locationName;
+        private final String stationId;
+        private final String chargingMode;
+        private final int durationMinutes;
+        private final double energyKwh;
+        private final double pricePerKwh;
+        private final double totalPrice;
+
+        public InvoiceItem(int itemNo,
+                           java.time.Instant startTime,
+                           String locationName,
+                           String stationId,
+                           String chargingMode,
+                           int durationMinutes,
+                           double energyKwh,
+                           double pricePerKwh,
+                           double totalPrice) {
+            this.itemNo = itemNo;
+            this.startTime = startTime;
+            this.locationName = locationName;
+            this.stationId = stationId;
+            this.chargingMode = chargingMode;
+            this.durationMinutes = durationMinutes;
+            this.energyKwh = energyKwh;
+            this.pricePerKwh = pricePerKwh;
+            this.totalPrice = totalPrice;
+        }
+
+        public int getItemNo() {
+            return itemNo;
+        }
+
+        public java.time.Instant getStartTime() {
+            return startTime;
+        }
+
+        public String getLocationName() {
+            return locationName;
+        }
+
+        public String getStationId() {
+            return stationId;
+        }
+
+        public String getChargingMode() {
+            return chargingMode;
+        }
+
+        public int getDurationMinutes() {
+            return durationMinutes;
+        }
+
+        public double getEnergyKwh() {
+            return energyKwh;
+        }
+
+        public double getPricePerKwh() {
+            return pricePerKwh;
+        }
+
+        public double getTotalPrice() {
+            return totalPrice;
+        }
     }
 }
